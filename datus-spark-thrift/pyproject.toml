@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "datus-spark-thrift"
+version = "0.1.0"
+description = "Spark Thrift Server connector for Datus Agent"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "DatusAI", email = "support@datus.ai"}
+]
+
+dependencies = [
+    "datus-agent>=0.2.3",
+    "pyhive[hive_pure_sasl]>=0.7.0",
+    "thrift>=0.16.0",
+    "pandas>=1.5.0",
+    "pyarrow>=12.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.entry-points."datus.adapters"]
+spark_thrift = "datus_spark_thrift:register"
+
+[tool.hatch.build.targets.wheel]
+packages = ["datus_spark_thrift"]

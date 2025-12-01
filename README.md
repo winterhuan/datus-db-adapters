@@ -19,6 +19,7 @@ Plugin Adapters (Independent packages, install as needed)
 └── Native SDK Adapters
     ├── datus-snowflake
     ├── datus-clickzetta
+    └── datus-spark-thrift (PyHive)
 ```
 
 ## Implemented Adapters
@@ -104,6 +105,65 @@ pip install datus-clickzetta
 - Volume/Stage file operations
 - Metadata discovery
 - Connection pooling and session management
+
+---
+
+### 6. datus-spark-thrift
+Spark Thrift Server adapter for Spark 3.x (native SDK).
+
+**Installation**:
+```bash
+pip install datus-spark-thrift
+```
+
+**Features**:
+- Native PyHive connector
+- Supports standard Spark SQL (database.table format)
+- Multiple result formats (CSV, Pandas, Arrow, List)
+- Metadata queries (databases, tables, views)
+- Multi-tenant support (isolated database access)
+- Connection pooling
+- Comprehensive error handling
+- Python >= 3.12 support
+
+**Usage**:
+```python
+from datus_spark_thrift import SparkThriftConfig, SparkThriftConnector
+
+# Create configuration
+config = SparkThriftConfig(
+    host="localhost",
+    port=10000,
+    username="user",
+    password="pass",
+    auth="LDAP",  # or NONE, CUSTOM
+    database="default",
+)
+
+# Create connector
+connector = SparkThriftConnector(config)
+
+# Execute queries
+result = connector.execute_query("SELECT * FROM table LIMIT 10")
+print(result.sql_return)
+
+# Metadata queries
+databases = connector.get_databases()
+tables = connector.get_tables()
+
+# Close connection
+connector.close()
+```
+
+**Authentication Modes**:
+- `NONE`: No authentication
+- `LDAP`: LDAP authentication (requires username/password)
+- `CUSTOM`: Custom authentication (requires username/password)
+
+**Notes**:
+- For Spark 3.x without Unity Catalog (database = schema concept)
+- Supports standard Spark DDL/DML operations
+- Compatible with Hive Thrift Server protocol
 
 ---
 
